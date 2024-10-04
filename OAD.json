@@ -1,0 +1,161 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Madeline Journal API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/entries": {
+      "get": {
+        "summary": "Retrieve all journal entries",
+        "operationId": "getAllEntries",
+        "responses": {
+          "200": {
+            "description": "200 OK response. Array of all journal entries retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#components/schemas/Entry",
+                    "description": "Individual journal entries"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Creates a new journal entry",
+        "operationId": "addNewEntry",
+        "requestBody": {
+          "description": "New journal entry",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#components/schemas/NewEntry"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "201 CREATED response. New journal entry successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "ref": "#/components/schema/Entry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/entries/{id}": {
+      "get": {
+        "summary": "Retrieve a specific journal entry by id",
+        "operationId": "getEntryById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of journal entry to retrieve",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK response. Specific journal entry retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/Entry",
+                  "description": "Individual journal entry"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a specific journal entry by id",
+        "operationId": "deleteEntryById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of journal entry to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "204 NO CONTENT response. Specific journal entry deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#components/schemas/Entry",
+                  "description": "Individual journal entry"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Entry": {
+        "allOf": [
+          {
+            "$ref": "#components/schemas/NewEntry"
+          },
+          {
+            "description": "An individual journal entry",
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ]
+      },
+      "NewEntry": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the journal entry"
+          },
+          "body": {
+            "type": "string",
+            "description": "Body content of the journal entry"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Array of tags added to journal entry",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
